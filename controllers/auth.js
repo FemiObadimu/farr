@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import mailgun from 'mailgun-js'
 import bcrypt from 'bcryptjs/dist/bcrypt.js';
 const DOMAIN = process.env.MAILGUN_SERVER;
-import helper from '../utils/helpers/help.js'
+import { generateOTP } from '../utils/helpers/help.js'
 
 // @THIS Block of Code, Registers the User
 export const register = async (req, res) => {
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
 
         const salt = await bcrypt.genSaltSync(12);
         const hashpassword = await bcrypt.hash(password, salt);
-        const otp = helper.generateOTP();
+        const otp = generateOTP();
         const hashedOtp = await bcrypt.hash(String(otp), salt);
 
 
@@ -43,7 +43,7 @@ export const register = async (req, res) => {
             isAccountVerified: false,
             isEmailVerified: false,
             kyc_complete: false,
-            customer_reference: `OGA-${customers.length + 1}`,
+            customer_reference: `FAR-${customers.length + 1}`,
         });
 
         await newUser.save(); // store customer data...
@@ -74,18 +74,18 @@ export const register = async (req, res) => {
         const data = {
             from: `${process.env.EMAIL_FROM}`,
             to: email,
-            subject: 'Ogamoni Account Activation',
+            subject: 'Farr Account Activation',
             html: `
                        <div>
                             <p>
                                 Hello there, <br/>
                            </p>
                             <p style="">
-                                 Welcome Onboard, we are thrilled to announce that you've successfully created an account on Ogamoni, the Budgeting of
+                                 Welcome Onboard, we are thrilled to announce that you've successfully created an account on Farr, the Budgeting of
                                funds and payments! 🎉
                             </p>
                             <p>
-                              Welcome to Ogamoni <br/> Explore the world of endless possibilities with Ogamoni. <br/>
+                              Welcome to Farr <br/> Explore the world of endless possibilities with Farr. <br/>
                               Enter the OTP Verification Code to verify your email address.
                             </p>
                     
@@ -97,34 +97,34 @@ export const register = async (req, res) => {
                                 </h1>
 
                              <p>
-                                From the Ogamoni Team.<br/>
+                                From the Farr Team.<br/>
                                 Join Our Social Media Handles for Updates.
                              </p>
 
 
                             <div style="padding:5px 0px; text-align:center; display:flex; flex-direction:column; justify-content:center; ">
                                 <div style="padding:2px; ">
-                                    <a href="https://www.linkedin.com/company/ogamonihq/" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
+                                    <a href="https://www.linkedin.com/company/Farrhq/" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://www.instagram.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
+                                    <a href="https://www.instagram.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://twitter.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
+                                    <a href="https://twitter.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                             </div>
                             <div style="padding:5px 0px; text-align:center ">
-                                <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/ogamoniwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="ogamoni" height="100px" />
+                                <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/Farrwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="Farr" height="100px" />
                             </div>
 
                             <div style="padding:10px 0px 0px 0px; text-align:center;">
-                                © Copyright. ogamoni.com
+                                © Copyright. Farr.com
                             </div>
                        </div>      
             `
@@ -174,7 +174,7 @@ export const resendVerificationOtp = async (req, res) => {
                         status: false,
                     });
 
-                const otp = helper.generateOTP();
+                const otp = generateOTP();
                 const salt = bcrypt.genSaltSync(12);
                 const hashedOtp = await bcrypt.hash(String(otp), salt);
                 customer.otpToken = hashedOtp;
@@ -190,18 +190,18 @@ export const resendVerificationOtp = async (req, res) => {
                         const data = {
                             from: `${process.env.EMAIL_FROM}`,
                             to: email,
-                            subject: 'Ogamoni Account Activation',
+                            subject: 'Farr Account Activation',
                             html: `
                                   <div>
                             <p>
                                 Hello there, <br/>
                            </p>
                             <p style="">
-                                 Welcome Onboard, we are thrilled to announce that you've successfully created an account on Ogamoni, the Budgeting of
+                                 Welcome Onboard, we are thrilled to announce that you've successfully created an account on Farr, the Budgeting of
                                funds and payments! 🎉
                             </p>
                             <p>
-                              Welcome to Ogamoni <br/> Explore the world of endless possibilities with Ogamoni. <br/>
+                              Welcome to Farr <br/> Explore the world of endless possibilities with Farr. <br/>
                               Enter the OTP Verification Code to verify your email address.
                             </p>
 
@@ -213,34 +213,34 @@ export const resendVerificationOtp = async (req, res) => {
                                 </h1>
 
                              <p>
-                                From the Ogamoni Team.<br/>
+                                From the Farr Team.<br/>
                                 Join Our Social Media Handles for Updates.
                              </p>
 
 
                             <div style="padding:5px 0px; text-align:center; display:flex; flex-direction:column; justify-content:center; ">
                                 <div style="padding:2px; ">
-                                    <a href="https://www.linkedin.com/company/ogamonihq/" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
+                                    <a href="https://www.linkedin.com/company/Farrhq/" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://www.instagram.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
+                                    <a href="https://www.instagram.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://twitter.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
+                                    <a href="https://twitter.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                             </div>
                             <div style="padding:5px 0px; text-align:center ">
-                                <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/ogamoniwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="ogamoni" height="100px" />
+                                <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/Farrwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="Farr" height="100px" />
                             </div>
 
                             <div style="padding:10px 0px 0px 0px; text-align:center;">
-                                © Copyright. ogamoni.com
+                                © Copyright. Farr.com
                             </div>
                        </div>             
                         `,
@@ -347,7 +347,7 @@ export const login = async (req, res) => {
         if (!user.isEmailVerified) {
 
             const salt = await bcrypt.genSaltSync(12);
-            const otp = helper.generateOTP();
+            const otp = generateOTP();
             const hashedOtp = await bcrypt.hash(String(otp), salt);
 
             user.otpToken = hashedOtp;
@@ -364,18 +364,18 @@ export const login = async (req, res) => {
             const data = {
                 from: `${process.env.EMAIL_FROM}`,
                 to: email,
-                subject: 'Ogamoni Account Activation',
+                subject: 'Farr Account Activation',
                 html: `
                        <div>
                             <p>
                                 Hello there, <br/>
                            </p>
                             <p style="">
-                                 Welcome Onboard, we are thrilled to announce that you've successfully created an account on Ogamoni, the Budgeting of
+                                 Welcome Onboard, we are thrilled to announce that you've successfully created an account on Farr, the Budgeting of
                                funds and payments! 🎉
                             </p>
                             <p>
-                              Welcome to Ogamoni <br/> Explore the world of endless possibilities with Ogamoni. <br/>
+                              Welcome to Farr <br/> Explore the world of endless possibilities with Farr. <br/>
                               Enter the OTP Verification Code to verify your email address.
                             </p>
                     
@@ -387,34 +387,34 @@ export const login = async (req, res) => {
                                 </h1>
 
                              <p>
-                                From the Ogamoni Team.<br/>
+                                From the Farr Team.<br/>
                                 Join Our Social Media Handles for Updates.
                              </p>
 
 
                             <div style="padding:5px 0px; text-align:center; display:flex; flex-direction:column; justify-content:center; ">
                                 <div style="padding:2px; ">
-                                    <a href="https://www.linkedin.com/company/ogamonihq/" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
+                                    <a href="https://www.linkedin.com/company/Farrhq/" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://www.instagram.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
+                                    <a href="https://www.instagram.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://twitter.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
+                                    <a href="https://twitter.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                             </div>
                             <div style="padding:5px 0px; text-align:center ">
-                                <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/ogamoniwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="ogamoni" height="100px" />
+                                <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/Farrwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="Farr" height="100px" />
                             </div>
 
                             <div style="padding:10px 0px 0px 0px; text-align:center;">
-                                © Copyright. ogamoni.com
+                                © Copyright. Farr.com
                             </div>
                        </div>      
             `
@@ -497,7 +497,7 @@ export const forgotPassword = async (req, res) => {
                         status: false,
                     });
 
-                const otp = helper.generateOTP();
+                const otp = generateOTP();
                 const salt = bcrypt.genSaltSync(12);
                 const hashedOtp = await bcrypt.hash(String(otp), salt);
                 customer.resetPasswordToken = hashedOtp;
@@ -527,7 +527,7 @@ export const forgotPassword = async (req, res) => {
                         const data = {
                             from: `${process.env.EMAIL_FROM}`,
                             to: email,
-                            subject: 'Ogamoni Reset Password ',
+                            subject: 'Farr Reset Password ',
                             html: `
                                <div>
                             <p>
@@ -535,7 +535,7 @@ export const forgotPassword = async (req, res) => {
                            </p>
 
                             <p>
-                              Welcome to Ogamoni <br/> Explore the world of endless possibilities with Ogamoni. <br/>
+                              Welcome to Farr <br/> Explore the world of endless possibilities with Farr. <br/>
                               Enter the Reset Password Verification Code to continue
                             </p>
                     
@@ -547,33 +547,33 @@ export const forgotPassword = async (req, res) => {
                                 </h1>
 
                              <p>
-                                From The Ogamoni Team.<br/>
+                                From The Farr Team.<br/>
                                 Join Our Social Media Handles for Updates.
                              </p>
 
                              <div style="padding:5px 0px; text-align:center; display:flex; flex-direction:column; justify-content:center; ">
                                 <div style="padding:2px; ">
-                                    <a href="https://www.linkedin.com/company/ogamonihq/" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
+                                    <a href="https://www.linkedin.com/company/Farrhq/" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://www.instagram.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
+                                    <a href="https://www.instagram.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://twitter.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
+                                    <a href="https://twitter.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                             </div>
                             <div style="padding:5px 0px; text-align:center ">
-                                <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/ogamoniwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="ogamoni" height="100px" />
+                                <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/Farrwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="Farr" height="100px" />
                             </div>
 
                             <div style="padding:10px 0px 0px 0px; text-align:center;">
-                                © Copyright. ogamoni.com
+                                © Copyright. Farr.com
                             </div>
 
 
@@ -707,7 +707,7 @@ export const resendResetPasswordOtp = async (req, res) => {
                         status: false,
                     });
 
-                const otp = helper.generateOTP();
+                const otp = generateOTP();
                 const salt = bcrypt.genSaltSync(12);
                 const hashedOtp = await bcrypt.hash(String(otp), salt);
                 customer.resetPasswordToken = hashedOtp;
@@ -736,7 +736,7 @@ export const resendResetPasswordOtp = async (req, res) => {
                         const data = {
                             from: `${process.env.EMAIL_FROM}`,
                             to: email,
-                            subject: 'Ogamoni Reset Password',
+                            subject: 'Farr Reset Password',
                             html: `
                              <div>
                             <p>
@@ -744,7 +744,7 @@ export const resendResetPasswordOtp = async (req, res) => {
                            </p>
 
                             <p>
-                              Welcome to Ogamoni <br/> Explore the world of endless possibilities with Ogamoni. <br/>
+                              Welcome to Farr <br/> Explore the world of endless possibilities with Farr. <br/>
                               Enter the Reset Password Verification Code to continue
                             </p>
 
@@ -756,33 +756,33 @@ export const resendResetPasswordOtp = async (req, res) => {
                                 </h1>
 
                              <p>
-                                From The Ogamoni Team.<br/>
+                                From The Farr Team.<br/>
                                 Join Our Social Media Handles for Updates.
                              </p>
 
                              <div style="padding:5px 0px; text-align:center; display:flex; flex-direction:column; justify-content:center; ">
                                 <div style="padding:2px; ">
-                                    <a href="https://www.linkedin.com/company/ogamonihq/" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
+                                    <a href="https://www.linkedin.com/company/Farrhq/" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/linkedin%20(1).png?updatedAt=1698255926190" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://www.instagram.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
+                                    <a href="https://www.instagram.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/instagram%20(1).png?updatedAt=1698255925991" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                                 <div style="padding:2px; ">
-                                    <a href="https://twitter.com/ogamonihq" target="_blank" style="padding:1px; ">
-                                      <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
+                                    <a href="https://twitter.com/Farrhq" target="_blank" style="padding:1px; ">
+                                      <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/twitter%20(1).png?updatedAt=1698255925981" alt="usekowe" height="30px" />
                                     </a>
                                 </div>
                             </div>
                             <div style="padding:5px 0px; text-align:center ">
-                                <img src="https://ik.imagekit.io/2cgacn5uv/ogamoni-images/ogamoniwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="ogamoni" height="100px" />
+                                <img src="https://ik.imagekit.io/2cgacn5uv/Farr-images/Farrwhite_bs-qbr_RK.png?updatedAt=1698255468184" alt="Farr" height="100px" />
                             </div>
 
                             <div style="padding:10px 0px 0px 0px; text-align:center;">
-                                © Copyright. ogamoni.com
+                                © Copyright. Farr.com
                             </div>
 
 

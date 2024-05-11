@@ -13,8 +13,6 @@ import { register, login, resendVerificationOtp, activateAccount, forgotPassword
 
 
 const router = express.Router();
-
-
 // @route POST /api/v1/auth/register
 router.post(
     '/register',
@@ -24,7 +22,7 @@ router.post(
 
 // @route GET /api/v1/auth/resend-verification-otp
 router.get(
-    '/resend/otp',
+    '/resend/verification/otp',
     authenticationMiddleware,
     resendVerificationOtp
 );

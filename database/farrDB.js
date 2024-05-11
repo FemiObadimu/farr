@@ -9,5 +9,4 @@ const connectMongoDatabase = async (url) => {
         process.exit(1);
     }
 };
-
 export default connectMongoDatabase;
