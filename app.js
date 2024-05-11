@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import connectMongoDatabase from './database/farrDB.js';
 import notFound from './errorHandlers/notFound.js';
 import errorHandler from './errorHandlers/errorHandler.js';
+import authRouter from './routes/authorization.js'
 
 
 
@@ -29,6 +30,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.send('Farr Server Success!');
 });
+
+app.use('/api/v1/farr/auth', authRouter);
+
 
 
 // Routes for handling Errors
