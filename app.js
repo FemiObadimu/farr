@@ -4,22 +4,41 @@ import express from 'express';
 import cors from 'cors';
 import listEndpoints from 'list_end_points';
 import helmet from 'helmet';
+import morgan from 'morgan';
 import connectMongoDatabase from './database/farrDB.js';
+import notFound from './errorHandlers/notFound.js';
+import errorHandler from './errorHandlers/errorHandler.js';
+
 
 
 const app = express()
-app.use(express.json())
+// app.enable('trust proxy');
+app.set('trust proxy', 1);
+// We are using this for the express-rate-limit middleware
+app.use(express.json({ limit: '10mb' }));
 app.use(helmet())
 app.use(cors())
-
-
+app.use(morgan('combined'));
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     next();
 });
 
+
+// Routes
 app.get('/', (req, res) => {
     res.send('Farr Server Success!');
+});
+
+
+// Routes for handling Errors
+app.use(notFound);
+app.use(errorHandler);
+
+// Use express's default error handling middleware
+app.use((err, req, res, next) => {
+    if (res.headersSent) return next(err);
+    res.status(400).json({ message: err.message });
 });
 
 const PORT = process.env.PORT
