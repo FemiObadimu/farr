@@ -1,4 +1,4 @@
-## Farr Shipping API
+# Farr Shipping API
 
 This repository contains the implementation of a RESTful API for a simplified shipping application. The API supports basic operations such as account creation, payment inquiries, tracking shipments, and checking delivered items in the warehouse. The application is built using Node.js with Express, utilizes MongoDB and Redis, and is containerized using Docker.
 
