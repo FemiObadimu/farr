@@ -115,6 +115,8 @@ export const verifyPayment = async (req, res) => {
         await transaction.save();
 
 
+
+
         const orderRef = `#${generateOTP()}`;
         const order = await Order.create({
             order_num: orderRef,
@@ -127,8 +129,10 @@ export const verifyPayment = async (req, res) => {
 
         await order.save();
 
+        console.log(event);
 
 
+        console.log("Transfer successful, orders processed.");
         return res.status(200).json({ message: 'Transfer successful, orders processed.' });
     } else {
         return res.status(400).json({ message: 'Event type is not charge.success', status: false });
