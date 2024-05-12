@@ -1,12 +1,11 @@
-
-const { createHmac } = await import('node:crypto');
+import crypto from 'crypto';
 import request from 'request';
 import User from '../models/User.js';
 import { paystackApi } from '../controllers/payStack.js';
 import { generateOTP } from '../utils/helpers/help.js'
 import Transaction from '../models/Transaction.js';
 import Order from '../models/Order.js';
-const secret = process.env.PAYSTACK_SECRET_KEY;
+const secret = process.env.PAYSTACK_APP_KEY;
 
 
 const initializePaymentWithCard = paystackApi(request).initializePaymentWithCard;
@@ -94,7 +93,7 @@ export const getListOfBanks = async (req, res) => {
 export const verifyPayment = async (req, res) => {
     try {
         // Validate event
-        const hash = createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+        const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
         if (hash !== req.headers['x-paystack-signature']) {
             return res.status(400).json({ message: 'Invalid signature', status: false });
         }
