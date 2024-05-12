@@ -100,6 +100,8 @@ export const verifyPayment = async (req, res) => {
     // Retrieve the request's body
     const event = req.body;
 
+    console.log(event);
+
     if (event && event.event === 'charge.success') {
         const user = await User.findOne({ email: event.data.customer.email });
         if (!user) {
