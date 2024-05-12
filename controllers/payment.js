@@ -114,14 +114,12 @@ export const verifyPayment = async (req, res) => {
         transaction.paystackReturn = event.data;
         await transaction.save();
 
-        // Assuming event.data.metadata.products is an array of product objects
-        const products = event.data.metadata.cart.items;
 
         const orderRef = `#${generateOTP()}`;
         const order = await Order.create({
             order_num: orderRef,
             user: user._id,
-            cart: products,
+            cart: event.data.metadata.cart.items,
             user_base: user,
             paymentMethod: 'card',
             cardinfo: event.data.authorization,
