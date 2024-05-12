@@ -91,52 +91,57 @@ export const getListOfBanks = async (req, res) => {
 
 // Verify Payment
 export const verifyPayment = async (req, res) => {
-    // Validate event
-    const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
-    if (hash !== req.headers['x-paystack-signature']) {
-        return res.status(400).json({ message: 'Invalid signature', status: false });
-    }
-
-    // Retrieve the request's body
-    const event = req.body;
-
-    console.log(event);
-
-    if (event && event.event === 'charge.success') {
-        const user = await User.findOne({ email: event.data.customer.email });
-        if (!user) {
-            return res.status(400).json({ message: 'User not found, Something went wrong', status: false });
+    try {
+        // Validate event
+        const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+        if (hash !== req.headers['x-paystack-signature']) {
+            return res.status(400).json({ message: 'Invalid signature', status: false });
         }
 
-        const transaction = await Transaction.findOne({ reference: event.data.reference });
-        if (!transaction) {
-            return res.status(400).json({ message: 'Transaction not found', status: false });
-        }
-        transaction.status = event.data.status;
-        transaction.paystackReturn = event.data;
-        await transaction.save();
-
-
-
-
-        const orderRef = `#${generateOTP()}`;
-        const order = await Order.create({
-            order_num: orderRef,
-            user: user._id,
-            cart: event.data.metadata.cart.items,
-            user_base: user,
-            paymentMethod: 'card',
-            cardinfo: event.data.authorization,
-        });
-
-        await order.save();
+        // Retrieve the request's body
+        const event = req.body;
 
         console.log(event);
 
+        if (event && event.event === 'charge.success') {
+            const user = await User.findOne({ email: event.data.customer.email });
+            if (!user) {
+                return res.status(400).json({ message: 'User not found, Something went wrong', status: false });
+            }
 
-        console.log("Transfer successful, orders processed.");
-        return res.status(200).json({ message: 'Transfer successful, orders processed.' });
-    } else {
-        return res.status(400).json({ message: 'Event type is not charge.success', status: false });
+            const transaction = await Transaction.findOne({ reference: event.data.reference });
+            if (!transaction) {
+                return res.status(400).json({ message: 'Transaction not found', status: false });
+            }
+            transaction.status = event.data.status;
+            transaction.paystackReturn = event.data;
+            await transaction.save();
+
+
+
+
+            const orderRef = `#${generateOTP()}`;
+            const order = await Order.create({
+                order_num: orderRef,
+                user: user._id,
+                cart: event.data.metadata.cart.items,
+                user_base: user,
+                paymentMethod: 'card',
+                cardinfo: event.data.authorization,
+            });
+
+            await order.save();
+
+            console.log(event);
+
+
+            console.log("Transfer successful, orders processed.");
+            return res.status(200).json({ message: 'Transfer successful, orders processed.' });
+        } else {
+            return res.status(400).json({ message: 'Event type is not charge.success', status: false });
+        }
+
+    } catch (error) {
+        console.log(error);
     }
 };
