@@ -9,7 +9,10 @@ import connectMongoDatabase from './database/farrDB.js';
 import notFound from './errorHandlers/notFound.js';
 import errorHandler from './errorHandlers/errorHandler.js';
 import authRouter from './routes/authorization.js'
-
+import productRoutes from './routes/products.js'
+import paymentRoutes from './routes/payment.js'
+import orderRoutes from './routes/orders.js'
+import transactionRoutes from './routes/transaction.js'
 
 
 const app = express()
@@ -30,8 +33,22 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.send('Farr Server Success!');
 });
-
+// Authentication and Authorization
 app.use('/api/v1/farr/auth', authRouter);
+
+// Products
+app.use('/api/v1/farr/products', productRoutes);
+
+// Payments
+app.use('/api/v1/farr/payments', paymentRoutes)
+
+// Orders
+app.use('/api/v1/farr/orders', orderRoutes)
+
+// Transactions
+app.use('/api/v1/farr/transactions', transactionRoutes)
+
+
 
 
 
