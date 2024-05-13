@@ -101,8 +101,6 @@ export const verifyPayment = async (req, res) => {
         // Retrieve the request's body
         const event = req.body;
 
-        console.log(event);
-
         if (event && event.event === 'charge.success') {
             const user = await User.findOne({ email: event.data.customer.email });
             if (!user) {
@@ -117,9 +115,6 @@ export const verifyPayment = async (req, res) => {
             transaction.paystackReturn = event.data;
             await transaction.save();
 
-
-
-
             const orderRef = `#${generateOTP()}`;
             const order = await Order.create({
                 order_num: orderRef,
@@ -132,7 +127,6 @@ export const verifyPayment = async (req, res) => {
 
             await order.save();
 
-            console.log(event);
 
 
             console.log("Transfer successful, orders processed.");

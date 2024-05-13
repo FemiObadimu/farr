@@ -1,4 +1,5 @@
 import Order from '../models/Order.js'
+import { sendOrderUpdate } from './kafkaProducer.js'; // adjust the path as needed
 
 export const getAllOrders = async (req, res) => {
     console.log('hello');
@@ -80,5 +81,27 @@ export const getOrderById = async (req, res) => {
             message: err.message,
             status: false
         });
+    }
+};
+
+
+export const updateOrderStatus = async (req, res) => {
+    const { orderId, status } = req.body;
+
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).send('Order not found');
+        }
+
+        order.status = status;
+        await order.save();
+
+        // Send the updated order to Kafka
+        sendOrderUpdate(order.toObject());
+
+        res.send('Order updated successfully');
+    } catch (error) {
+        res.status(500).send(error.toString());
     }
 };
