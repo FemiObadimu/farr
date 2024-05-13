@@ -1,5 +1,5 @@
 import Order from '../models/Order.js'
-import { sendOrderUpdate } from './kafkaProducer.js'; // adjust the path as needed
+// import { sendOrderUpdate } from './kafkaProducer.js'; // adjust the path as needed
 
 export const getAllOrders = async (req, res) => {
     console.log('hello');
@@ -98,7 +98,7 @@ export const updateOrderStatus = async (req, res) => {
         await order.save();
 
         // Send the updated order to Kafka
-        sendOrderUpdate(order.toObject());
+        // sendOrderUpdate(order.toObject());
 
         res.send('Order updated successfully');
     } catch (error) {
